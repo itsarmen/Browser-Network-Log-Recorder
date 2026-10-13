@@ -41,15 +41,15 @@ and Firefox.
 
 ```powershell
 # 1. Run the viewer (debug, hot-reload). First run does `flutter pub get`.
-python run_windows.py
+python tools/run_windows.py
 
 # Launch the prebuilt exe without rebuilding:
-python run_windows.py --exe
+python tools/run_windows.py --exe
 
 # Release run / build only / analyze first:
-python run_windows.py --release
-python run_windows.py --build-only
-python run_windows.py --analyze
+python tools/run_windows.py --release
+python tools/run_windows.py --build-only
+python tools/run_windows.py --analyze
 ```
 
 The viewer starts its server automatically. If port `8765` is taken you'll see
@@ -120,7 +120,8 @@ Popup settings (`browser.storage.local`): **Recording**, **Skip static GETs**,
 │   ├── icons/               Windows set + app_icon.ico
 │   ├── icons/linux/         hicolor theme for future GNOME packaging
 │   └── store/               AMO / Snap / Microsoft Store graphics + checklist
-├── run_windows.py           one-command launcher (run / build / exe / analyze)
+├── tools/run_windows.py       one-command launcher (run / build / exe / analyze)
+├── tools/build_windows.py     release exe + installer builder
 ├── LICENSE                  MIT — open source, attribution required
 └── branding.md              palette, logo spec, icon matrix (for designers/AI)
 ```

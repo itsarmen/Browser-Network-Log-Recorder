@@ -8,7 +8,7 @@
 ;
 ; Inno Setup script — per-user installer (no admin rights needed).
 ; Build the app first, then compile this script:
-;   python run_windows.py --installer
+;   python tools/run_windows.py --installer
 ; or manually:
 ;   flutter build windows --release
 ;   ISCC installer\network-log-recorder.iss
@@ -53,7 +53,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 CloseApplications=yes
 
-; Code signing (optional): `python run_windows.py --installer --sign` passes
+; Code signing (optional): `python tools/run_windows.py --installer --sign` passes
 ; /DSignEnabled=1 and /Sdevsign="<signtool command>" on the ISCC command line,
 ; so no secrets are stored in this script.
 #ifdef SignEnabled

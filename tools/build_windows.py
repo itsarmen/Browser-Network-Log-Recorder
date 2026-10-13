@@ -8,10 +8,10 @@
 
 """Build the Windows app and its installer (companion to run_windows.py).
 
-Usage:
-    python build_windows.py              # release exe + signed-ready installer
-    python build_windows.py --sign       # + self-signed code signature
-    python build_windows.py --exe-only   # release exe only, no installer
+Usage (from the repo root):
+    python tools/build_windows.py              # release exe + signed-ready installer
+    python tools/build_windows.py --sign       # + self-signed code signature
+    python tools/build_windows.py --exe-only   # release exe only, no installer
 
 Delegates to run_windows.py so there is exactly one build implementation.
 """

@@ -8,14 +8,14 @@
 
 """Easily run the Network Log Viewer desktop app.
 
-Usage:
-    python run_windows.py                  # flutter run -d windows (debug)
-    python run_windows.py --release        # flutter run --release -d windows
-    python run_windows.py --exe            # launch prebuilt exe, no rebuild
-    python run_windows.py --build-only     # flutter build windows, don't launch
-    python run_windows.py --analyze        # flutter analyze before running
-    python run_windows.py --installer      # release build + Inno Setup installer
-    python run_windows.py --installer --sign  # + self-signed code signature
+Usage (from the repo root):
+    python tools/run_windows.py                  # flutter run -d windows (debug)
+    python tools/run_windows.py --release        # flutter run --release -d windows
+    python tools/run_windows.py --exe            # launch prebuilt exe, no rebuild
+    python tools/run_windows.py --build-only     # flutter build windows, don't launch
+    python tools/run_windows.py --analyze        # flutter analyze before running
+    python tools/run_windows.py --installer      # release build + Inno Setup installer
+    python tools/run_windows.py --installer --sign  # + self-signed code signature
 
 Needs Flutter SDK with Windows desktop enabled:
     flutter config --enable-windows-desktop
@@ -34,7 +34,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+_HERE = Path(__file__).resolve().parent
+# Script lives in tools/; fall back to the script dir for exotic layouts.
+ROOT = _HERE if (_HERE / "flutter-desktop-app").is_dir() else _HERE.parent
 APP_DIR = ROOT / "flutter-desktop-app"
 PORT = 8765
 
