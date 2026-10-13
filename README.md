@@ -2,8 +2,8 @@
 
 ![Firefox Network Log Recorder banner](branding/github-banner.svg)
 
-Record the network traffic of a Firefox browsing session — log in to your own
-website, click around — and inspect every request in a desktop viewer.
+Record the network traffic of a Firefox browsing session - log in to your own
+website, click around - and inspect every request in a desktop viewer.
 **100% local:** the viewer serves only `127.0.0.1:8765`, storage is a local
 SQLite database, nothing ever leaves your machine.
 
@@ -21,14 +21,14 @@ Firefox ──webRequest──► extension background ──HTTP POST /api/logs
 
 ## Features
 
-**Extension** — toolbar popup with recording toggle, `REC` badge, viewer-online
+**Extension** - toolbar popup with recording toggle, `REC` badge, viewer-online
 indicator (`GET /api/ping`), live counters (stored / captured / skipped /
 sent / failed), **Resend all** and **Export JSON** for offline sessions.
 Captures method, URL, request/response headers, request body (form + raw,
 decoded), status, timing, duration and errors. Static-asset `GET`s
 (image, script, stylesheet, font, manifest) are skipped by default.
 
-**Desktop viewer** — live request table, per-website sidebar with search,
+**Desktop viewer** - live request table, per-website sidebar with search,
 full-text log search, details dialog with Overview / Request / Response /
 **Edit & Run** / Raw tabs, request replay with redirect control, copy-as-cURL,
 JSON + XML import/export, dark-mode-ready Yaru theme.
@@ -61,7 +61,7 @@ a warning in the terminal and a banner in the app.
 2. Open `about:debugging#/runtime/this-firefox`.
 3. Click **Load Temporary Add-on…** and select `extension/manifest.json`.
 4. Click the toolbar icon: the badge should show **viewer online**.
-5. Turn **Recording** on (`REC` badge), log in to your site, navigate around —
+5. Turn **Recording** on (`REC` badge), log in to your site, navigate around -
    requests stream into the viewer live.
 
 To keep it permanently: zip the **contents** of `extension/`, have it signed,
@@ -86,7 +86,7 @@ schemes, and (while "Skip static GETs" is on) `GET` requests of type `image`,
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | `/api/ping` | `"pong"` — viewer-online indicator |
+| `GET` | `/api/ping` | `"pong"` - viewer-online indicator |
 | `GET` | `/api/health` | `{ status, port, count }` |
 | `GET` | `/api/logs` | All buffered records as JSON |
 | `POST` | `/api/logs` | Ingest one record or an array |
@@ -122,7 +122,7 @@ Popup settings (`browser.storage.local`): **Recording**, **Skip static GETs**,
 │   └── store/               AMO / Snap / Microsoft Store graphics + checklist
 ├── tools/run_windows.py       one-command launcher (run / build / exe / analyze)
 ├── tools/build_windows.py     release exe + installer builder
-├── LICENSE                  MIT — open source, attribution required
+├── LICENSE                  MIT - open source, attribution required
 └── branding.md              palette, logo spec, icon matrix (for designers/AI)
 ```
 
@@ -130,7 +130,7 @@ Popup settings (`browser.storage.local`): **Recording**, **Skip static GETs**,
 
 Ubuntu/Yaru look: accent `#E95420`, surfaces `#FFFFFF`, text `#2B2B2B`,
 borders `#E0E0E0`. Full token list, logo spec and the complete icon matrix
-(Windows taskbar/Start/desktop/ICO, Firefox 16–128, Linux hicolor) are in
+(Windows taskbar/Start/desktop/ICO, Firefox 16-128, Linux hicolor) are in
 [`branding.md`](branding.md). Store-ready graphics plus per-store checklists
 and listing copy: [`branding/store/STORE-ASSETS.md`](branding/store/STORE-ASSETS.md).
 
@@ -142,11 +142,11 @@ Web: <https://xrow.asia>
 
 ## License & user agreement
 
-MIT — see [LICENSE](LICENSE). This project is open source: you may use, copy,
+MIT - see [LICENSE](LICENSE). This project is open source: you may use, copy,
 modify and distribute it, **provided the original author credit stays intact**.
 That means keeping the copyright notice and the author header comments at the
 top of the source files in any copy or derivative work.
 
 By installing or using the software you also accept the
-[End-User License Agreement](AGREEMENT.md) — a development/testing tool for
+[End-User License Agreement](AGREEMENT.md) - a development/testing tool for
 your own projects only, local-only by design, used entirely at your own risk.

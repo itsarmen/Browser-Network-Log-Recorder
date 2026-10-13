@@ -1,10 +1,10 @@
 # END-USER LICENSE AGREEMENT (EULA)
 
 **Firefox Network Log Recorder 1.0.0**
-Copyright © 2026 itsarmen — <https://github.com/itsarmen>
+Copyright © 2026 itsarmen - <https://github.com/itsarmen>
 
 > Plain-language summary (not a substitute for the terms below): the app is
-> free and open source (MIT). It sends nothing anywhere — everything stays on
+> free and open source (MIT). It sends nothing anywhere - everything stays on
 > your machine. Only capture traffic you are allowed to capture. The software
 > comes with no warranty. By installing or using it, you accept these terms.
 
@@ -13,7 +13,7 @@ Copyright © 2026 itsarmen — <https://github.com/itsarmen>
 By downloading, installing, copying, or using the Software (the Firefox
 extension and/or the desktop viewer, including documentation), you agree to be
 bound by this Agreement. **If you do not agree, do not install or use the
-Software — uninstall it and delete all copies.**
+Software - uninstall it and delete all copies.**
 
 ## 2. License grant and intended purpose
 
@@ -23,7 +23,7 @@ right to install and use any number of copies of the provided builds on devices
 you own or administer.
 
 **Intended purpose:** this Software is a development and testing tool. It is
-meant to be used while building and debugging **your own projects** — for
+meant to be used while building and debugging **your own projects** - for
 example inspecting the network traffic of a website or service you develop or
 are explicitly authorized to test. Any use outside this purpose, and in
 particular any harmful use (see §3), is prohibited. The Software is licensed,
@@ -54,7 +54,7 @@ The Software is local-first by design:
 
 - The desktop viewer serves only loopback (`127.0.0.1:8765`) and is not
   reachable from any network.
-- Captured records — including request and response headers and bodies —
+- Captured records - including request and response headers and bodies -
   are stored exclusively in a local SQLite database on your own device
   (`%LOCALAPPDATA%\NetworkLogViewer\logs.db`, or the equivalent path on
   other platforms).
@@ -70,7 +70,7 @@ captured with the Software, no controller-to-processor relationship exists
 between you and the Author. There are no sub-processors, no data processing
 addendum, and no international data transfers performed by the Software.
 
-**You — the person operating the Software — act as the controller (within
+**You - the person operating the Software - act as the controller (within
 the meaning of Article 4(7) of Regulation (EU) 2016/679, the General Data
 Protection Regulation, "GDPR", and equivalent roles under other applicable
 data protection laws) of every piece of personal data you capture, store,
@@ -79,9 +79,9 @@ protection law imposes on controllers rest with you alone.
 
 ### 4.3. Your duties as controller
 
-Where your captured traffic contains personal data — which it ordinarily
+Where your captured traffic contains personal data - which it ordinarily
 will, since logins, tokens, cookies, contact forms, and analytics payloads
-routinely do — you shall observe, at a minimum, the following principles
+routinely do - you shall observe, at a minimum, the following principles
 (cf. Article 5 GDPR):
 
 - **Lawfulness, fairness and transparency.** Have a valid legal basis for
@@ -106,7 +106,7 @@ routinely do — you shall observe, at a minimum, the following principles
 - **Accountability.** You shall be able to demonstrate compliance with all
   of the above.
 
-### 4.4. Sensitive material — heightened warning
+### 4.4. Sensitive material - heightened warning
 
 Captured traffic may include passwords, session tokens, `Authorization`
 headers, cookies, payment details, health-related information, or other
@@ -114,7 +114,7 @@ special categories of data (cf. Article 9 GDPR), whose processing is subject
 to stricter conditions up to and including an outright prohibition. Exercise
 extreme restraint: avoid capturing such material at all, and where
 unavoidable, delete it immediately after the test. **Note: the Software
-provides no masking, redaction, or anonymisation features — every captured
+provides no masking, redaction, or anonymisation features - every captured
 header and body is displayed and stored verbatim, exactly as transmitted**
 (see §4.5).
 
@@ -135,10 +135,10 @@ You expressly acknowledge and accept each of the following:
 
 ### 4.6. Retention, erasure, and data-subject rights
 
-If you capture personal data relating to other persons, you — as controller
-— are responsible for honouring their rights, including the rights of access,
+If you capture personal data relating to other persons, you - as controller
+- are responsible for honouring their rights, including the rights of access,
 rectification, erasure, restriction, portability, and objection (cf.
-Articles 12–22 GDPR). The Software assists you mechanically: records can be
+Articles 12-22 GDPR). The Software assists you mechanically: records can be
 inspected, exported, selectively deleted, truncated in bulk via the Truncate
 function, and wiped entirely via Clear or by uninstalling the Software
 (which deletes the database directory). Responding to data-subject requests
@@ -147,9 +147,9 @@ lawfully and on time remains your duty, not the Author's.
 ### 4.7. No transfers by the Software; your transfers are yours
 
 The Software performs no cross-border or other transfers of personal data.
-Any transfer you effect yourself — by exporting log files, sending them by
+Any transfer you effect yourself - by exporting log files, sending them by
 email, uploading them to issue trackers, or moving them to another machine
-— is your own act as controller, subject in full to Chapter V GDPR (or
+- is your own act as controller, subject in full to Chapter V GDPR (or
 equivalent transfer rules), and your sole responsibility.
 
 ### 4.8. Confidentiality of communications
@@ -175,17 +175,17 @@ audit report, or statement of applicability is offered or implied.
 
 Should personal data you captured be accidentally or unlawfully destroyed,
 lost, altered, or disclosed (for example through device theft, malware, or
-mishandled export files), any statutory breach-notification duties — including
+mishandled export files), any statutory breach-notification duties - including
 notification to the supervisory authority and to affected data subjects
-(cf. Articles 33–34 GDPR) — fall on you as controller. The Author, having no
+(cf. Articles 33-34 GDPR) - fall on you as controller. The Author, having no
 access to your data, cannot detect, assess, or notify breaches on your behalf.
 
 ### 4.11. Records of processing
 
 To the extent Article 30 GDPR (or an equivalent duty) obliges you to maintain
 records of processing activities, you shall include your use of this Software
-— its purposes, data categories, recipients (none, by design), retention
-periods, and security measures — in those records yourself.
+- its purposes, data categories, recipients (none, by design), retention
+periods, and security measures - in those records yourself.
 
 ## 5. Restrictions
 
@@ -208,25 +208,25 @@ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. CAPTURED DATA IS STORED
 LOCALLY AT YOUR OWN RISK; KEEP YOUR OWN BACKUPS OF ANYTHING IMPORTANT.
 
-## 8. Your responsibility — the Author is not responsible for anything
+## 8. Your responsibility - the Author is not responsible for anything
 
-YOU USE THE SOFTWARE ENTIRELY AT YOUR OWN RISK. Everything you do with it —
+YOU USE THE SOFTWARE ENTIRELY AT YOUR OWN RISK. Everything you do with it -
 what you capture, what you store, what you replay, and what consequences
-follow — is **yours alone**. The Author is not responsible for anything:
+follow - is **yours alone**. The Author is not responsible for anything:
 not for your actions, not for your data, not for damage to you or anyone
 else, whether caused by you, by a third party, or by the Software itself.
 
 **Indemnity (hold harmless):** you agree to defend, indemnify, and hold
 harmless the Author from and against any and all claims, damages, losses,
 costs, and expenses (including reasonable legal fees) arising from or related
-to your use or misuse of the Software — including, without limitation, any
+to your use or misuse of the Software - including, without limitation, any
 unauthorized interception, data theft, surveillance, or other harmful or
 unlawful use described in §3.
 
 TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE AUTHOR SHALL NOT BE LIABLE FOR ANY
 DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR
 ANY LOSS OF DATA, PROFITS, OR REVENUE, ARISING FROM THE USE OF OR INABILITY TO
-USE THE SOFTWARE — INCLUDING ANY LIABILITY ARISING FROM UNLAWFUL INTERCEPTION
+USE THE SOFTWARE - INCLUDING ANY LIABILITY ARISING FROM UNLAWFUL INTERCEPTION
 OR ANY OTHER HARM CARRIED OUT WITH THE SOFTWARE BY YOU OR ANY THIRD PARTY.
 IF YOU DO NOT ACCEPT THIS, DO NOT USE THE SOFTWARE.
 
@@ -249,7 +249,7 @@ By using the Software you commit to the following principles of respect:
   relating to any person without proper authorization and legal basis.
 - **Respect for the work.** Respect the Author's work: keep copyright
   notices, the LICENSE file, and author attributions intact, and do not
-  present the Software — or versions derived from it — as anyone else's
+  present the Software - or versions derived from it - as anyone else's
   work or as endorsed by anyone who has not endorsed it.
 
 Breach of this section is a breach of this Agreement and terminates your

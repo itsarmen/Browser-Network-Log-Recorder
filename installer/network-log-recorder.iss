@@ -14,7 +14,7 @@
 ;   ISCC installer\network-log-recorder.iss
 
 #define MyAppName "Network Log Recorder"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "AMiran Kimadze (itsarmen)"
 #define MyAppURL "https://xrow.asia"
 #define MyAppSupportURL "https://github.com/itsarmen"

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Network Log Recorder",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Toggle recording, then capture request method, URL, headers, body and response for GET/POST/PATCH/DELETE while you browse and log in. Static asset GETs (image/js/css/font) are skipped. Streams logs to the desktop viewer app.",
   "author": "Network Log Recorder",
   "permissions": [
