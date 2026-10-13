@@ -68,9 +68,10 @@ installer/cert/
 *.pfx
 secrets.json
 
-# --- Doc / spec / prompt clutter (only root README stays) ---
+# --- Doc / spec / prompt clutter (only root README + agreement stay) ---
 *.md
 !README.md
+!AGREEMENT.md
 opencode-prompts/
 
 # --- OS junk ---

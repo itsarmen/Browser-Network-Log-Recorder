@@ -411,17 +411,39 @@ class _HomePageState extends State<HomePage> {
         tooltip: 'More',
         icon: const Icon(Icons.more_vert),
         onSelected: _onMore,
-        itemBuilder: (context) => const [
-          PopupMenuItem(value: 'clear', child: Text('Clear all logs')),
-          PopupMenuDivider(),
-          PopupMenuItem(value: 'view-json', child: Text('Current view → JSON')),
-          PopupMenuItem(value: 'view-xml', child: Text('Current view → XML')),
-          PopupMenuDivider(),
-          PopupMenuItem(value: 'all-json', child: Text('All records → JSON')),
-          PopupMenuItem(value: 'all-xml', child: Text('All records → XML')),
-          PopupMenuDivider(),
-          PopupMenuItem(value: 'import', child: Text('Import JSON/XML…')),
-        ],
+        itemBuilder: (context) {
+          final checked = state.checkedIds.length;
+          return [
+            const PopupMenuItem(
+                value: 'clear', child: Text('Clear all logs')),
+            if (checked > 0)
+              PopupMenuItem(
+                  value: 'clear-selection',
+                  child: Text('Clear selection ($checked)')),
+            const PopupMenuDivider(),
+            const PopupMenuItem(
+                value: 'view-json', child: Text('Current view → JSON')),
+            const PopupMenuItem(
+                value: 'view-xml', child: Text('Current view → XML')),
+            const PopupMenuDivider(),
+            const PopupMenuItem(
+                value: 'all-json', child: Text('All records → JSON')),
+            const PopupMenuItem(
+                value: 'all-xml', child: Text('All records → XML')),
+            const PopupMenuDivider(),
+            PopupMenuItem(
+                value: 'selected-json',
+                enabled: checked > 0,
+                child: Text('Export selected ($checked) → JSON')),
+            PopupMenuItem(
+                value: 'selected-xml',
+                enabled: checked > 0,
+                child: Text('Export selected ($checked) → XML')),
+            const PopupMenuDivider(),
+            const PopupMenuItem(
+                value: 'import', child: Text('Import JSON/XML…')),
+          ];
+        },
       ),
       const SizedBox(width: 6),
     ];
@@ -539,8 +561,14 @@ class _HomePageState extends State<HomePage> {
     switch (value) {
       case 'clear':
         _clear();
+      case 'clear-selection':
+        state.clearChecked();
       case 'import':
         _import();
+      case 'selected-json':
+        _exportRecords(state.checkedRecords, 'json');
+      case 'selected-xml':
+        _exportRecords(state.checkedRecords, 'xml');
       default:
         _export(value);
     }
@@ -580,12 +608,17 @@ class _HomePageState extends State<HomePage> {
   Future<void> _export(String action) async {
     final xml = action.endsWith('xml');
     final all = action.startsWith('all');
-    final records = all ? state.all : state.visible;
+    await _exportRecords(
+        all ? state.all : state.visible, xml ? 'xml' : 'json');
+  }
+
+  Future<void> _exportRecords(
+      List<LogRecord> records, String extension) async {
+    final xml = extension == 'xml';
     if (records.isEmpty) {
       _snack('Nothing to export');
       return;
     }
-    final extension = xml ? 'xml' : 'json';
     final suggested =
         'network-log-${DateTime.now().millisecondsSinceEpoch}.$extension';
     final location = await getSaveLocation(suggestedName: suggested);

@@ -132,12 +132,31 @@ class _Toolbar extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             _vsep(context),
-            IconButton(
-              tooltip: state.live ? 'Pause (live updates on)' : 'Resume (live updates off)',
-              isSelected: !state.live,
-              selectedIcon: const Icon(Icons.play_arrow_outlined),
-              icon: const Icon(Icons.pause_outlined),
-              onPressed: () => state.setLive(!state.live),
+            Tooltip(
+              message: state.live
+                  ? 'Live on: new requests appear on page 1 automatically'
+                  : 'Live off: list is frozen, arrivals buffer in background',
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppSizes.radius),
+                onTap: () => state.setLive(!state.live),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Checkbox(
+                        value: state.live,
+                        onChanged: (v) => state.setLive(v ?? false),
+                      ),
+                      const Text(
+                        'Live',
+                        style: TextStyle(fontSize: AppSizes.fontBody),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             IconButton(
               tooltip: 'Refresh from database',
@@ -149,6 +168,33 @@ class _Toolbar extends StatelessWidget {
               onPressed: state.refresh,
             ),
             SkippedTypesButton(state: state),
+            DropdownButton<String>(
+              value: state.methodFilter,
+              isDense: true,
+              underline: const SizedBox.shrink(),
+              iconEnabledColor: AppColors.secondary,
+              dropdownColor: AppColors.surface,
+              style: const TextStyle(
+                fontSize: AppSizes.fontBody,
+                color: AppColors.text,
+              ),
+              items: [
+                for (final method in AppState.methodOptions)
+                  DropdownMenuItem(
+                    value: method,
+                    child: Text(
+                      method == 'All' ? 'Method: All' : method,
+                      style: const TextStyle(
+                        fontSize: AppSizes.fontBody,
+                        color: AppColors.text,
+                      ),
+                    ),
+                  ),
+              ],
+              onChanged: (v) {
+                if (v != null) state.setMethodFilter(v);
+              },
+            ),
             Expanded(child: _TypeTabs(state: state)),
           ],
         ),
@@ -346,19 +392,33 @@ class _ColumnHeader extends StatelessWidget {
     return SizedBox(
       height: AppSizes.columnHeader,
       child: LayoutBuilder(
-        builder: (context, constraints) => ColumnLayout.buildHeader(
-          constraints.maxWidth,
-          (column, label, flex, right, onTap) => Expanded(
-            flex: flex,
-            child: _HeaderCell(
-              label: label,
-              right: right,
-              active: state.sortColumn == column,
-              ascending: state.sortAscending,
-              onTap: onTap,
+        builder: (context, constraints) => Row(
+          children: [
+            _CheckCell(
+              // null = dash: some (not all) of the page is checked.
+              value: state.pageAnyChecked
+                  ? (state.pageAllChecked ? true : null)
+                  : false,
+              onChanged: (_) =>
+                  state.setPageChecked(!state.pageAllChecked),
             ),
-          ),
-          (column) => state.setSortColumn(column),
+            Expanded(
+              child: ColumnLayout.buildHeader(
+                constraints.maxWidth - _CheckCell.width,
+                (column, label, flex, right, onTap) => Expanded(
+                  flex: flex,
+                  child: _HeaderCell(
+                    label: label,
+                    right: right,
+                    active: state.sortColumn == column,
+                    ascending: state.sortAscending,
+                    onTap: onTap,
+                  ),
+                ),
+                (column) => state.setSortColumn(column),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -435,10 +495,13 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final records = state.visible;
+    final records = state.pageItems;
     if (records.isEmpty) {
       return _Empty(state: state);
     }
+    // Indices stay global (position inside state.visible) so keyboard
+    // navigation, selection and dialogs keep working across pages.
+    final offset = state.pageStart;
     return LayoutBuilder(
       builder: (context, constraints) => ListView.builder(
         primary: false,
@@ -447,7 +510,7 @@ class _Body extends StatelessWidget {
         itemBuilder: (context, index) => _Row(
           state: state,
           record: records[index],
-          index: index,
+          index: offset + index,
           width: constraints.maxWidth,
           onOpen: onOpen,
         ),
@@ -465,7 +528,9 @@ class _Empty extends StatelessWidget {
   Widget build(BuildContext context) {
     final captured = state.stored.isEmpty;
     final filtered = !captured &&
-        (state.logSearch.trim().isNotEmpty || state.typeTab != 'All');
+        (state.logSearch.trim().isNotEmpty ||
+            state.typeTab != 'All' ||
+            state.methodFilter != 'All');
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -501,10 +566,37 @@ class _Empty extends StatelessWidget {
                 onPressed: () {
                   state.setLogSearch('');
                   state.setTypeTab('All');
+                  state.setMethodFilter('All');
                 },
                 child: const Text('Clear filter'),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Fixed-width checkbox cell for the header (select page) and the rows.
+/// Lives outside the flex column layout so all columns stay aligned.
+class _CheckCell extends StatelessWidget {
+  const _CheckCell({required this.value, required this.onChanged});
+
+  static const double width = 36;
+
+  /// null renders the tristate dash (page partially checked).
+  final bool? value;
+  final ValueChanged<bool?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Center(
+        child: Checkbox(
+          value: value,
+          tristate: true,
+          onChanged: onChanged,
         ),
       ),
     );
@@ -551,21 +643,34 @@ class _RowState extends State<_Row> {
           },
           onSecondaryTapDown: (details) =>
               controller.open(position: details.globalPosition),
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
-            height: AppSizes.tableRow,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              border: (selected || _hovered)
-                  ? Border.all(
-                      color: selected
-                          ? AppColors.borderSelected
-                          : AppColors.borderHover,
-                    )
-                  : null,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
+              height: AppSizes.tableRow,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                border: (selected || _hovered)
+                    ? Border.all(
+                        color: selected
+                            ? AppColors.borderSelected
+                            : AppColors.borderHover,
+                      )
+                    : null,
+              ),
+              child: Row(
+                children: [
+                  _CheckCell(
+                    value: widget.state.isChecked(r),
+                    onChanged: (_) => widget.state.toggleChecked(r),
+                  ),
+                  Expanded(
+                    child: ColumnLayout.buildRow(
+                      widget.width - _CheckCell.width,
+                      _cells(context, r, selected),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: ColumnLayout.buildRow(widget.width, _cells(context, r, selected)),
-          ),
         ),
       ),
     );
@@ -718,7 +823,10 @@ class _Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final records = state.visible;
-    final filtered = state.logSearch.trim().isNotEmpty || state.typeTab != 'All' || state.viewSite != null;
+    final filtered = state.logSearch.trim().isNotEmpty ||
+        state.typeTab != 'All' ||
+        state.methodFilter != 'All' ||
+        state.viewSite != null;
     final totalBytes = records.fold<int>(0, (sum, r) => sum + (transferredBytes(r) ?? 0));
     final slowest = records
         .where((r) => r.durationMs != null)
@@ -764,9 +872,73 @@ class _Footer extends StatelessWidget {
               if (success > 0 && errors > 0) const SizedBox(width: 12),
               if (errors > 0) item('$errors error', color: AppColors.error),
             ],
+            const SizedBox(width: 8),
+            _pager(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _pager(BuildContext context) {
+    final last = state.pageCount - 1;
+    final atFirst = state.pageIndex <= 0;
+    final atLast = state.pageIndex >= last;
+    IconButton btn(IconData icon, String tip, VoidCallback? onTap) =>
+        IconButton(tooltip: tip, icon: Icon(icon, size: 18), onPressed: onTap);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(width: 1, height: 14, color: AppColors.divider),
+        const SizedBox(width: 4),
+        btn(Icons.skip_previous, 'First page',
+            atFirst ? null : () => state.setPage(0)),
+        btn(Icons.chevron_left, 'Previous page',
+            atFirst ? null : () => state.setPage(state.pageIndex - 1)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Text(
+            '${state.pageRangeLabel} • ${state.pageLabel}',
+            maxLines: 1,
+            style: const TextStyle(
+              fontSize: AppSizes.fontSecondary,
+              color: AppColors.secondary,
+            ),
+          ),
+        ),
+        btn(Icons.chevron_right, 'Next page',
+            atLast ? null : () => state.setPage(state.pageIndex + 1)),
+        btn(Icons.skip_next, 'Last page',
+            atLast ? null : () => state.setPage(last)),
+        const SizedBox(width: 4),
+        DropdownButton<int>(
+          value: state.pageSize,
+          isDense: true,
+          underline: const SizedBox.shrink(),
+          iconEnabledColor: AppColors.secondary,
+          dropdownColor: AppColors.surface,
+          style: const TextStyle(
+            fontSize: AppSizes.fontSecondary,
+            color: AppColors.text,
+          ),
+          items: [
+            for (final size in AppState.pageSizeOptions)
+              DropdownMenuItem(
+                value: size,
+                child: Text(
+                  '$size',
+                  style: const TextStyle(
+                    fontSize: AppSizes.fontSecondary,
+                    color: AppColors.text,
+                  ),
+                ),
+              ),
+          ],
+          onChanged: (v) {
+            if (v != null) state.setPageSize(v);
+          },
+        ),
+      ],
     );
   }
 

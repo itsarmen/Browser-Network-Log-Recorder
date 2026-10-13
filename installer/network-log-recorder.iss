@@ -37,7 +37,14 @@ OutputDir=output
 OutputBaseFilename=NetworkLogRecorder-Setup-{#MyAppVersion}
 SetupIconFile=..\\branding\\icons\\app_icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
-LicenseFile=..\\LICENSE
+#ifndef LicenseTxt
+#define LicenseTxt "..\\LICENSE"
+#endif
+#ifndef AgreementTxt
+#define AgreementTxt "..\\AGREEMENT.md"
+#endif
+InfoBeforeFile={#LicenseTxt}
+LicenseFile={#AgreementTxt}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern

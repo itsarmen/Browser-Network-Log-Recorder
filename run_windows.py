@@ -27,6 +27,7 @@ For --sign: Windows SDK signtool (comes with Visual Studio / Windows SDK).
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import socket
 import subprocess
@@ -186,6 +187,31 @@ def sign_file(signtool: str, pfx: Path, password: str, target: Path) -> None:
         raise SystemExit(f"ERROR: signing failed: {target}")
 
 
+def _md_to_txt(md: str) -> str:
+    """Minimal Markdown → plain text for the Inno wizard pages."""
+    out = []
+    for line in md.splitlines():
+        line = re.sub(r"^#{1,6}\s*", "", line)
+        line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1 (\2)", line)
+        line = line.replace("**", "").replace("__", "")
+        out.append(line.rstrip())
+    return "\n".join(out).strip() + "\n"
+
+
+def _installer_texts() -> tuple[str, str]:
+    """Render LICENSE + AGREEMENT.md to Temp .txt files (no drift)."""
+    tmp = Path.home() / "AppData" / "Local" / "Temp" / "opencode"
+    tmp.mkdir(parents=True, exist_ok=True)
+    license_txt = tmp / "installer-license.txt"
+    agreement_txt = tmp / "installer-agreement.txt"
+    license_txt.write_text(
+        (ROOT / "LICENSE").read_text(encoding="utf-8"), encoding="utf-8")
+    agreement_txt.write_text(
+        _md_to_txt((ROOT / "AGREEMENT.md").read_text(encoding="utf-8")),
+        encoding="utf-8")
+    return str(license_txt), str(agreement_txt)
+
+
 def build_installer(flutter: str, sign: bool, cert_password: str) -> int:
     if not ISS.is_file():
         raise SystemExit(f"ERROR: installer script not found: {ISS}")
@@ -195,7 +221,10 @@ def build_installer(flutter: str, sign: bool, cert_password: str) -> int:
     if exe is None:
         raise SystemExit("ERROR: release build produced no exe.")
     iscc = find_iscc()
-    cmd = [iscc, str(ISS)]
+    license_txt, agreement_txt = _installer_texts()
+    cmd = [iscc, str(ISS),
+           f"/DLicenseTxt={license_txt}",
+           f"/DAgreementTxt={agreement_txt}"]
     if sign:
         signtool = find_signtool()
         pfx = ensure_dev_cert(cert_password)

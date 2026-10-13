@@ -139,9 +139,13 @@ and listing copy: [`branding/store/STORE-ASSETS.md`](branding/store/STORE-ASSETS
 GitHub: <https://github.com/itsarmen> · Email: <amoswaper@gmail.com> ·
 Web: <https://xrow.asia>
 
-## License
+## License & user agreement
 
 MIT — see [LICENSE](LICENSE). This project is open source: you may use, copy,
 modify and distribute it, **provided the original author credit stays intact**.
 That means keeping the copyright notice and the author header comments at the
 top of the source files in any copy or derivative work.
+
+By installing or using the software you also accept the
+[End-User License Agreement](AGREEMENT.md) — a development/testing tool for
+your own projects only, local-only by design, used entirely at your own risk.

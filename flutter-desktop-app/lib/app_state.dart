@@ -70,10 +70,25 @@ class AppState extends ChangeNotifier {
   String logSearch = '';
   String siteSearch = '';
   String typeTab = 'All';
+  static const List<String> methodOptions = [
+    'All',
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'HEAD',
+    'OPTIONS',
+  ];
+  String methodFilter = 'All';
   LogColumn sortColumn = LogColumn.time;
   bool sortAscending = false;
   int selectedIndex = -1;
   bool live = true;
+
+  static const List<int> pageSizeOptions = [25, 50, 100, 200];
+  int pageSize = 50;
+  int pageIndex = 0;
 
   bool serverRunning = false;
   String status = 'Server stopped';
@@ -170,6 +185,9 @@ class AppState extends ChangeNotifier {
 
     if (added.isNotEmpty) {
       _rebuildDisplay();
+      // Live follow: new arrivals show on page 1. Paused browsing keeps
+      // its page (pending count is shown on the refresh button instead).
+      if (live) pageIndex = 0;
     } else {
       notifyListeners();
     }
@@ -281,6 +299,7 @@ class AppState extends ChangeNotifier {
 
   void selectSite(SiteItem? item) {
     viewSite = (item == null || item.isAll) ? null : item.name;
+    pageIndex = 0;
     _selectFirst();
     notifyListeners();
   }
@@ -298,6 +317,7 @@ class AppState extends ChangeNotifier {
     _recountSites();
     activeSite = trimmed;
     viewSite = trimmed;
+    pageIndex = 0;
     notifyListeners();
   }
 
@@ -311,6 +331,7 @@ class AppState extends ChangeNotifier {
     if (activeSite == oldName) activeSite = trimmed;
     if (viewSite == oldName) viewSite = trimmed;
     _rebuildDisplay();
+    pageIndex = 0;
     notifyListeners();
   }
 
@@ -323,6 +344,8 @@ class AppState extends ChangeNotifier {
     if (activeSite == name) activeSite = '';
     if (viewSite == name) viewSite = null;
     _rebuildDisplay();
+    pageIndex = 0;
+    _pruneChecked();
     notifyListeners();
   }
 
@@ -343,6 +366,7 @@ class AppState extends ChangeNotifier {
       db.insert(kept);
     } catch (_) {}
     _rebuildDisplay();
+    pageIndex = 0;
     notifyListeners();
     return added;
   }
@@ -379,10 +403,12 @@ class AppState extends ChangeNotifier {
     all.clear();
     pending.clear();
     _keys.clear();
+    checkedIds.clear();
     skippedSession = 0;
     viewSite = null;
     activeSite = '';
     selectedIndex = -1;
+    pageIndex = 0;
     _rebuildDisplay();
     server.history.clear();
     notifyListeners();
@@ -400,6 +426,7 @@ class AppState extends ChangeNotifier {
 
   void setLogSearch(String value) {
     logSearch = value;
+    pageIndex = 0;
     _selectFirst();
     notifyListeners();
   }
@@ -411,6 +438,14 @@ class AppState extends ChangeNotifier {
 
   void setTypeTab(String value) {
     typeTab = value;
+    pageIndex = 0;
+    _selectFirst();
+    notifyListeners();
+  }
+
+  void setMethodFilter(String value) {
+    methodFilter = value;
+    pageIndex = 0;
     _selectFirst();
     notifyListeners();
   }
@@ -486,6 +521,10 @@ class AppState extends ChangeNotifier {
       query = query.where((r) => r.site == viewSite);
     }
     query = query.where((r) => _matchesTab(r));
+    if (methodFilter != 'All') {
+      final method = methodFilter;
+      query = query.where((r) => r.method.toUpperCase() == method);
+    }
     final fq = FilterQuery.parse(logSearch);
     if (!fq.isEmpty) {
       query = query.where(fq.matches);
@@ -493,6 +532,104 @@ class AppState extends ChangeNotifier {
     final list = query.toList();
     list.sort(_compare);
     return list;
+  }
+
+  // ------------------------------------------------------------------
+  // Pagination (selection indices stay global — position inside [visible])
+  // ------------------------------------------------------------------
+
+  int get pageCount {
+    final total = visible.length;
+    if (total == 0) return 1;
+    return ((total - 1) ~/ pageSize) + 1;
+  }
+
+  /// Page clamped into range, so a shrunk list never strands the pager.
+  int get _clampedPage {
+    final total = visible.length;
+    if (total == 0) return 0;
+    return pageIndex.clamp(0, ((total - 1) ~/ pageSize));
+  }
+
+  int get pageStart => _clampedPage * pageSize;
+
+  List<LogRecord> get pageItems {
+    final list = visible;
+    if (list.isEmpty) return list;
+    final start = _clampedPage * pageSize;
+    final end = (start + pageSize).clamp(0, list.length);
+    return list.sublist(start, end);
+  }
+
+  String get pageLabel {
+    final total = visible.length;
+    if (total == 0) return 'Page 1 of 1';
+    return 'Page ${_clampedPage + 1} of $pageCount';
+  }
+
+  String get pageRangeLabel {
+    final total = visible.length;
+    if (total == 0) return '0 of 0';
+    final start = pageStart + 1;
+    final end = (pageStart + pageSize).clamp(0, total);
+    return '$start–$end of $total';
+  }
+
+  void setPage(int index) {
+    pageIndex = index.clamp(0, pageCount - 1);
+    notifyListeners();
+  }
+
+  void setPageSize(int size) {
+    pageSize = size;
+    pageIndex = 0;
+    _selectFirst();
+    notifyListeners();
+  }
+
+  // ------------------------------------------------------------------
+  // Checkbox multi-select (id-based, survives paging and filtering)
+  // ------------------------------------------------------------------
+
+  static String recordKey(LogRecord r) => '${r.id}|${r.timeStamp}';
+
+  final Set<String> checkedIds = <String>{};
+
+  bool isChecked(LogRecord r) => checkedIds.contains(recordKey(r));
+
+  void toggleChecked(LogRecord r) {
+    final key = recordKey(r);
+    if (!checkedIds.remove(key)) checkedIds.add(key);
+    notifyListeners();
+  }
+
+  void setPageChecked(bool value) {
+    for (final r in pageItems) {
+      if (value) {
+        checkedIds.add(recordKey(r));
+      } else {
+        checkedIds.remove(recordKey(r));
+      }
+    }
+    notifyListeners();
+  }
+
+  bool get pageAllChecked =>
+      pageItems.isNotEmpty && pageItems.every(isChecked);
+
+  bool get pageAnyChecked => pageItems.any(isChecked);
+
+  void clearChecked() {
+    if (checkedIds.isEmpty) return;
+    checkedIds.clear();
+    notifyListeners();
+  }
+
+  List<LogRecord> get checkedRecords =>
+      visible.where(isChecked).toList();
+
+  void _pruneChecked() {
+    checkedIds.retainWhere((key) => _keys.contains(key));
   }
 
   bool _matchesTab(LogRecord r) {
