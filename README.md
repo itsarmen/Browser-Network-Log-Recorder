@@ -126,6 +126,16 @@ Popup settings (`browser.storage.local`): **Recording**, **Skip static GETs**,
 └── branding.md              palette, logo spec, icon matrix (for designers/AI)
 ```
 
+## Releasing
+
+1. Bump the version in `flutter-desktop-app/pubspec.yaml`,
+   `extension/manifest.json`, and `installer/network-log-recorder.iss`.
+2. Rebuild artifacts: `python extension/build.py` and
+   `python tools/build_windows.py --sign`.
+3. Publish (release title convention: `Browser-Network-Log-Recorder vX.Y.Z`):
+   `gh release create vX.Y.Z --title "Browser-Network-Log-Recorder vX.Y.Z"
+   --notes "..." installer/output/*.exe extension/dist/*.xpi`
+
 ## Branding
 
 Ubuntu/Yaru look: accent `#E95420`, surfaces `#FFFFFF`, text `#2B2B2B`,
