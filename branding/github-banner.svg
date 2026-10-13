@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="480" viewBox="0 0 1280 480" role="img" aria-label="Firefox Network Log Recorder">
+<title>Firefox Network Log Recorder</title>
+<desc>Capture and inspect Firefox network traffic — locally.</desc>
+<defs>
+<filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
+<feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#000000" flood-opacity="0.22"/>
+</filter>
+</defs>
+<rect width="1280" height="480" fill="#FFFFFF"/>
+<rect x="1" y="1" width="1278" height="478" fill="none" stroke="#E0E0E0" stroke-width="2"/>
+<svg x="110" y="100" width="280" height="280" viewBox="0 0 256 256" filter="url(#logoShadow)">
+<defs>
+<linearGradient id="logoBg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#5E2750"/>
+<stop offset="0.55" stop-color="#9B2F4B"/>
+<stop offset="1" stop-color="#E95420"/>
+</linearGradient>
+</defs>
+<rect x="8" y="8" width="240" height="240" rx="54" fill="url(#logoBg)"/>
+<g fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+<path d="M84 62 Q62 62 62 84 L62 112 Q62 128 46 128 Q62 128 62 144 L62 172 Q62 194 84 194"/>
+<path d="M172 62 Q194 62 194 84 L194 112 Q194 128 210 128 Q194 128 194 144 L194 172 Q194 194 172 194"/>
+</g>
+<g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+<g stroke="#FFFFFF">
+<line x1="110" y1="164" x2="110" y2="94"/>
+<polyline points="94,110 110,94 126,110"/>
+</g>
+<g stroke="#FFC9B0">
+<line x1="146" y1="92" x2="146" y2="162"/>
+<polyline points="130,146 146,162 162,146"/>
+</g>
+</g>
+</svg>
+<text x="460" y="157" font-family="Ubuntu, 'Ubuntu Sans', Cantarell, 'Segoe UI', sans-serif" font-weight="bold" font-size="50" fill="#2B2B2B">Firefox Network Log Recorder</text>
+<rect x="460" y="184" width="220" height="10" rx="5" fill="#E95420"/>
+<text x="460" y="264" font-family="Ubuntu, 'Ubuntu Sans', Cantarell, 'Segoe UI', sans-serif" font-size="30" fill="#6B6B6B">Capture and inspect Firefox network traffic — locally.</text>
+<g><rect x="460" y="314" width="250" height="48" rx="24" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/><circle cx="483" cy="338" r="7" fill="#E95420"/><text x="498" y="346" font-family="Ubuntu, 'Ubuntu Sans', Cantarell, 'Segoe UI', sans-serif" font-size="24" fill="#2B2B2B">Firefox Extension</text></g>
+<g><rect x="726" y="314" width="234" height="48" rx="24" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/><circle cx="749" cy="338" r="7" fill="#E95420"/><text x="764" y="346" font-family="Ubuntu, 'Ubuntu Sans', Cantarell, 'Segoe UI', sans-serif" font-size="24" fill="#2B2B2B">Flutter Desktop</text></g>
+<g><rect x="976" y="314" width="249" height="48" rx="24" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/><circle cx="999" cy="338" r="7" fill="#E95420"/><text x="1014" y="346" font-family="Ubuntu, 'Ubuntu Sans', Cantarell, 'Segoe UI', sans-serif" font-size="24" fill="#2B2B2B">Local-first · :8765</text></g>
+</svg>

@@ -1,0 +1,75 @@
+<!--
+  Project : Firefox Network Log Recorder
+  Author  : AMiran Kimadze (itsarmen)
+  GitHub  : https://github.com/itsarmen
+  Email   : amoswaper@gmail.com
+  Web     : https://xrow.asia
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Network Log Recorder</h1>
+      <span id="conn" class="pill off">checking…</span>
+    </header>
+
+    <section class="card">
+      <label class="row switch-row">
+        <span>Recording</span>
+        <input id="recording" type="checkbox" />
+      </label>
+      <p id="recHint" class="hint">Off — requests are not captured.</p>
+    </section>
+
+    <section class="card">
+      <label class="row switch-row">
+        <span>Skip static GETs (js/css/img/font)</span>
+        <input id="skipStatic" type="checkbox" />
+      </label>
+      <label class="row switch-row" style="margin-top: 8px">
+        <span>Capture response bodies</span>
+        <input id="captureResponseBody" type="checkbox" />
+      </label>
+    </section>
+
+    <section class="card">
+      <label class="label" for="site">Website / session name (optional)</label>
+      <input id="site" type="text" spellcheck="false" placeholder="e.g. MyShop login" />
+    </section>
+
+    <section class="card">
+      <label class="label" for="serverUrl">Viewer server URL</label>
+      <div class="row">
+        <input id="serverUrl" type="text" spellcheck="false" />
+        <button id="saveUrl" class="btn">Save</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div><span id="count">0</span><small>stored</small></div>
+      <div><span id="captured">0</span><small>captured</small></div>
+      <div><span id="skipped">0</span><small>skipped</small></div>
+      <div><span id="sent">0</span><small>sent</small></div>
+      <div><span id="failed">0</span><small>failed</small></div>
+    </section>
+
+    <p id="error" class="error hidden"></p>
+
+    <section class="actions">
+      <button id="resend" class="btn">Resend all</button>
+      <button id="export" class="btn">Export JSON</button>
+      <button id="clear" class="btn danger">Clear</button>
+    </section>
+
+    <footer>
+      <small>Changes save automatically. Keep the viewer app running to stream logs live.</small>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
